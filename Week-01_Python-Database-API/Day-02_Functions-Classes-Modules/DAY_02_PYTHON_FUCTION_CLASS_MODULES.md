@@ -73,9 +73,9 @@ Day-02_Functions-Classes-Modules/
 
 ## Timeline
 
-**18-08-2026:** Learned and practiced Functions, Classes, and Modules.
+**20-08-2026:** Learned and practiced Functions, Classes, and Modules.
 
-**19-08-2026:** Completed the Number Guessing Game utility project.
+**21-08-2026:** Completed the Number Guessing Game utility project.
 
 ## Status
 

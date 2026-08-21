@@ -41,6 +41,12 @@ python -m venv .venv
 python -m venv .venv --without-pip
 ```
 
+### Create With pip
+
+```powershell
+python -m venv .venv
+```
+
 ### Activate
 
 ```powershell
@@ -104,28 +110,35 @@ pip install -r requirements.txt
 ### Basic Example
 
 ```python
-import asyncio
+   import asyncio
 
-
-async def main():
-
-    print("Task Started")
-
+async def Task1():
+    print("Task 1 started")
     await asyncio.sleep(2)
+    print("Task 1 completed")
 
-    print("Task Completed")
+async def Task2():
+    print("Task 2 started")
+    await asyncio.sleep(1)
+    print("Task 2 completed")
+
+async def Task3():
+    print("Task 3 started")
+    await asyncio.sleep(3)
+    print("Task 3 completed")
 
 
-asyncio.run(main())
 ```
 
 ### Multiple Tasks
 
 ```python
-await asyncio.gather(
-    task_one(),
-    task_two()
-)
+async def main():
+    await asyncio.gather(Task1(), Task2(), Task3())
+
+# Run the main function
+asyncio.run(main())
+
 ```
 
 ---
@@ -278,7 +291,7 @@ Day-03_Async-Virtual-Environment/
 ├── Virtual_ Environment/
 │   └── .venv/
 ├── requirements.txt
-├── README.md
+├── DAY_03_PYTHON_Async_Venv.md
 └── .gitignore
 ```
 

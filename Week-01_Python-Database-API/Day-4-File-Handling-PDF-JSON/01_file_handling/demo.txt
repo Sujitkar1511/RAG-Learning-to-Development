@@ -1,6 +1,0 @@
-Name: Sujit Kar
-Course: BCA
-Semester: 6
-Language: Python
-Topic: File Handling
-Status: Learning

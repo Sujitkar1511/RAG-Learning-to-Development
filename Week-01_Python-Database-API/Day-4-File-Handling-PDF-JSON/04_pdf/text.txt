@@ -1,0 +1,215 @@
+Complete Python PDF Handling Guide
+ 
+Beginner → Practical Reference
+This guide covers the main PDF tasks you should learn for a Python File Handling / Day 4 workflow: reading
+PDFs, extracting text, converting PDF ↔ text, metadata, pages, merging, splitting, rotating, creating PDFs, and
+converting extracted information into structured data.
+1. What is PDF Handling?
+PDF handling means using Python to read, create, modify, extract, and organize information in PDF documents.
+2. Libraries Used
+PyPDF2 — reading and manipulating existing PDFs.
+ReportLab — creating PDFs from text/data.
+pip install PyPDF2 reportlab
+import PyPDF2
+from reportlab.pdfgen import canvas
+3. PDF → Text: Read and Extract Text
+import PyPDF2
+with open("sample.pdf", "rb") as file:
+reader = PyPDF2.PdfReader(file)
+page = reader.pages[0]
+text = page.extract_text()
+print(text)
+Use binary read mode rb. A PDF that contains selectable text is easiest to extract.
+4. Extract Text from All Pages
+import PyPDF2
+with open("sample.pdf", "rb") as file:
+reader = PyPDF2.PdfReader(file)
+for page in reader.pages:
+text = page.extract_text()
+if text:
+print(text)
+5. PDF Page Count
+reader = PyPDF2.PdfReader("sample.pdf")
+print(len(reader.pages))
+6. Read a Specific Page
+reader = PyPDF2.PdfReader("sample.pdf")
+page = reader.pages[0]
+print(page.extract_text())
+Remember: Python page indexes start from 0.
+7. Save PDF Text as TXT (PDF → Text File)
+import PyPDF2
+
+with open("sample.pdf", "rb") as pdf_file:
+reader = PyPDF2.PdfReader(pdf_file)
+with open("output.txt", "w", encoding="utf-8") as text_file:
+for page in reader.pages:
+text = page.extract_text()
+if text:
+text_file.write(text)
+text_file.write("\n")
+
+8. Text → PDF
+For creating a PDF from text, use ReportLab.
+from reportlab.pdfgen import canvas
+text = "Hello Python\nThis is a PDF file."
+pdf = canvas.Canvas("output.pdf")
+y = 800
+for line in text.splitlines():
+pdf.drawString(50, y, line)
+y -= 20
+pdf.save()
+Flow: TXT/String → ReportLab → PDF.
+9. Text File → PDF
+from reportlab.pdfgen import canvas
+pdf = canvas.Canvas("output.pdf")
+y = 800
+with open("data.txt", "r", encoding="utf-8") as file:
+for line in file:
+pdf.drawString(50, y, line.rstrip())
+y -= 20
+pdf.save()
+For long documents, later learn ReportLab Platypus because it handles page breaks and text flow better.
+10. PDF Metadata
+from PyPDF2 import PdfReader
+reader = PdfReader("sample.pdf")
+print(reader.metadata)
+Metadata may include title, author, subject, creator, and other document information.
+11. Merge Multiple PDFs
+from PyPDF2 import PdfReader, PdfWriter
+writer = PdfWriter()
+for name in ["one.pdf", "two.pdf"]:
+reader = PdfReader(name)
+for page in reader.pages:
+writer.add_page(page)
+with open("merged.pdf", "wb") as file:
+writer.write(file)
+12. Split / Extract Selected Pages
+from PyPDF2 import PdfReader, PdfWriter
+reader = PdfReader("sample.pdf")
+writer = PdfWriter()
+for i in [0, 1]:
+
+writer.add_page(reader.pages[i])
+with open("selected.pdf", "wb") as file:
+writer.write(file)
+13. Rotate a Page
+from PyPDF2 import PdfReader, PdfWriter
+reader = PdfReader("sample.pdf")
+writer = PdfWriter()
+page = reader.pages[0]
+page.rotate(90)
+writer.add_page(page)
+with open("rotated.pdf", "wb") as file:
+writer.write(file)
+
+14. PDF → Structured Data
+This is especially useful for your Document Reader deliverable. After extracting text, parse recognizable fields
+into a Python dictionary.
+text = """Name: Sujit
+Age: 21
+Course: BCA"""
+student = {}
+for line in text.splitlines():
+key, value = line.split(":", 1)
+student[key.strip().lower()] = value.strip()
+print(student)
+Output: {'name': 'Sujit', 'age': '21', 'course': 'BCA'}
+15. PDF Password / Encryption Awareness
+Some PDFs are protected. PyPDF2 can work with encrypted PDFs after authentication when the password is
+available. Do not assume every PDF can be extracted normally.
+from PyPDF2 import PdfReader
+reader = PdfReader("protected.pdf")
+if reader.is_encrypted:
+reader.decrypt("password")
+16. Scanned PDF and OCR
+A scanned PDF may contain images instead of selectable text. In that case, extract_text() may return little or
+no useful text. OCR (Optical Character Recognition) is needed to recognize text from images. This is an
+advanced step and can be learned after the basics.
+17. Common PDF Workflow
+PDF
+↓
+PdfReader
+↓
+Pages
+↓
+extract_text()
+↓
+Text
+↓
+Parse / Structure
+↓
+Dictionary / JSON
+18. Reverse Workflow
+Text / String / Data
+↓
+ReportLab
+↓
+PDF
+19. Recommended Learning Order
+Order
+Topic
+1
+Open and read a PDF
+
+2
+Count pages
+3
+Read a specific page
+4
+Extract text
+5
+Extract text from all pages
+6
+PDF → TXT
+7
+Text/String → PDF
+8
+Read metadata
+9
+Merge PDFs
+10
+Split/select pages
+11
+Rotate pages
+12
+PDF → structured data
+13
+Encrypted PDFs
+14
+OCR for scanned PDFs
+20. Git Structure
+04_pdf/
+■■■ 01_read_pdf.py
+■■■ 02_page_count.py
+■■■ 03_specific_page.py
+■■■ 04_extract_text.py
+■■■ 05_pdf_to_txt.py
+■■■ 06_txt_to_pdf.py
+■■■ 07_metadata.py
+■■■ 08_merge_pdf.py
+■■■ 09_split_pdf.py
+■■■ 10_rotate_pdf.py
+■■■ 11_structured_data.py
+■■■ 12_encrypted_pdf.py
+■■■ sample.pdf
+21. Important Limitations
+PDF extraction is not guaranteed to preserve the exact visual layout of a document. Tables, columns, images,
+handwriting, and scanned pages can require specialized processing or OCR. For beginner practice, start with
+simple text-based PDFs.
+22. Day 4 Deliverable — Document Reader
+The final mini-project can read a PDF, extract its text, identify simple fields such as Name/Age/Course, and
+store the result as a Python dictionary or JSON file.
+PDF
+↓
+Read PDF
+↓
+Extract Text
+↓
+Clean Text
+↓
+Extract Fields
+↓
+Python Dictionary
+↓
+JSON
+
